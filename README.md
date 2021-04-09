@@ -21,7 +21,21 @@ To SKD Assessment is broken into three main stages.
 
 To run the whole system in a single program, 
 ```
+# Inside skd_oppt run 
 
+chmod +x run_skd_assessment.sh && ./run_skd_assessment.sh
+
+```
+
+The trajectory generation components can also be run in separate such as:
+```
+# For Safe Traj Generation
+mkdir SafeTrajOutDir
+python3 SKDSafeTrajGenerator.py -o ${PWD}/SafeTrajOutDir -cfg config/config.yaml
+
+# For Kamikaze Traj Generation
+mkdir KamikazeTrajOutDir
+python3 SKDKamikazeTrajGenerator.py -o ${PWD}/KamikazeTrajOutDir -cfg config/config.yaml
 
 
 ```
