@@ -16,7 +16,6 @@ import OPPTLogAnalyser
 
 
 
-
 def get_skd_configurations(config_path):
     """
     Loads the yaml configuration file for the assessment of a vehicle. The function returns a
@@ -27,6 +26,7 @@ def get_skd_configurations(config_path):
         configurations = yaml.full_load(config_file)
         print(configurations)
         return configurations
+        
 
 def main():
 	""" Entry point for assesment """
