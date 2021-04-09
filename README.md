@@ -5,11 +5,12 @@ Repository used for assessment of autonomous vehicles usig SKD as a safety metri
 
 ## Repository breakdown:
 *Planner Module:*
--[opptv5](opptv5)
+[opptv5](opptv5)
 
 *SKD Assessment Module:*
--[skd_oppt](skd_oppt)
--[skd_python](skd_python)
+[skd_oppt](skd_oppt)
+
+[skd_python](skd_python)
 
 ### Planner Component (OPPT v5)
 The opptv5 module contains the local version of the toolkit [OPPT](https://github.com/RDLLab/oppt) used for the planning of the Pedestrian's interaction with the assessed vehicle.
