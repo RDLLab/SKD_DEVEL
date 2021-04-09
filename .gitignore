@@ -1,0 +1,11 @@
+# SKD Git Ignore
+
+# Ignore all build files
+build/
+
+# Ignore all python cached modules
+__pycache__
+
+# Ignore all pyc files
+*.pyc
+
