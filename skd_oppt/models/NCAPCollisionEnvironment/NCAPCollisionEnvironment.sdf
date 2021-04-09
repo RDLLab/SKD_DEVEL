@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<sdf version='1.6'>
+<world name='NCAPCollisionEnvironment'>
+ 
+	 <!-- Model of the Robot -->
+    <include>
+      <uri>model://Car</uri>
+      <pose>0 0 0.65 0 0 0</pose>
+    </include>
+
+    <!-- Model of the cylinder cup  -->
+    <model name="Pedestrian">
+      <link name='PedestrianLink'>
+          <pose>20 0 0.93 0 -0 0</pose>
+          <collision name='PedCollision'>
+            <geometry>
+              <cylinder>
+                <radius>0.34</radius>
+                <length>1.86</length>         
+              </cylinder>
+            </geometry>
+          </collision>
+          <visual name='PedCollision'>
+            <geometry>
+              <cylinder>
+                <radius>0.34</radius>
+                <length>1.86</length>        
+              </cylinder>
+            </geometry>          
+          </visual>
+      </link>
+    </model>   
+
+</world>
+</sdf>

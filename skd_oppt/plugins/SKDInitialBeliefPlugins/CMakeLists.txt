@@ -1,0 +1,8 @@
+# Kamikaze Traj Gen Plugin
+ADD_INITIAL_BELIEF_PLUGIN(KamikazeTrajGenInitialBeliefPlugin ${CMAKE_CURRENT_LIST_DIR}/KamikazeTrajGenInitialBeliefPlugin.cpp)
+target_include_directories(KamikazeTrajGenInitialBeliefPlugin PRIVATE ${PROJECT_SOURCE_DIR})
+
+# Safety plugins
+ADD_INITIAL_BELIEF_PLUGIN(SafeTrajGenInitialBeliefPlugin ${CMAKE_CURRENT_LIST_DIR}/SafeTrajGenInitialBeliefPlugin.cpp)
+target_include_directories(SafeTrajGenInitialBeliefPlugin PRIVATE ${PROJECT_SOURCE_DIR})
+
