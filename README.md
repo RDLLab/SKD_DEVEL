@@ -13,6 +13,19 @@ The opptv5 module contains the local version of the toolkit [OPPT](https://githu
 planner used in the assessment mechanism.
 - skd_python: This module contains the scripts to execute the SKD Asssement Mechanism
 
+### Installation:
+Install the planner component by running 
+```
+chmod +x oppt_install.sh && ./oppt_install.sh
+```
+
+Install the skd_oppt modules by running
+```
+chmod +x skd_oppt_install.sh && ./skd_oppt_install.sh
+```
+
+
+
 ### Running the SKD Assessment Mechanism
 To SKD Assessment is broken into three main stages. 
 	- Safety Trajectory Generation
@@ -22,9 +35,7 @@ To SKD Assessment is broken into three main stages.
 To run the whole system in a single program, 
 ```
 # Inside skd_oppt run 
-
 chmod +x run_skd_assessment.sh && ./run_skd_assessment.sh
-
 ```
 
 ### Running Trajectory Generation Mechanism
