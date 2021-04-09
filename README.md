@@ -27,6 +27,7 @@ chmod +x run_skd_assessment.sh && ./run_skd_assessment.sh
 
 ```
 
+### Running Trajectory Generation Mechanism
 The trajectory generation components can also be run in separate such as:
 ```
 # For Safe Traj Generation
@@ -36,7 +37,6 @@ python3 SKDSafeTrajGenerator.py -o ${PWD}/SafeTrajOutDir -cfg config/config.yaml
 # For Kamikaze Traj Generation
 mkdir KamikazeTrajOutDir
 python3 SKDKamikazeTrajGenerator.py -o ${PWD}/KamikazeTrajOutDir -cfg config/config.yaml
-
 
 ```
 
