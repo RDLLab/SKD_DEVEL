@@ -276,43 +276,6 @@ def compute_synthetic_data():
 	experiment_organizer.analyze_experiments_scenarios(outdata_filename, gen_plots = False, sample_size = -1)
 
 
-def compute_synthetic_data_straight():
-	# Keys to compute the data
-	controller_ids = [".50", ".625", ".75", ".875", "1.00", "1.05", "1.10", "1.125", "1.15"]
-	safe_trajs_map = {"0" : ["0"]}
-
-	# Output files
-	outdata_filename = "/home/jimy/Desktop/KamikazeResults/StraightLineSyntheticKamikazeResuts.csv"
-	output_dir = "/home/jimy/Desktop/KamikazeResults/StraightLineSyntheticKamikazeResuts"
-
-	experiment_organizer = OPPTExperimentsOrganizer(controller_ids, safe_trajs_map,
-	output_dir, OPPTExperimentsOrganizer.SITUATION_SYNTHETIC_DATA)
-	#experiment_organizer.process_organizer()
-	experiment_organizer.analyze_experiments_scenarios(outdata_filename, gen_plots = True, sample_size = 500)
-
-
-
-def compute_real_data():
-	# Keys to compute the data
-	controller_ids = [".50", ".625", ".75", ".875", "1.00", "1.05", "1.10", "1.125", "1.15"]
-	safe_trajs_map = {"2" : ["6"], 
-						"3" : ["3" , "7"], 
-						"4" : ["3", "6"]}
-	# Output files
-	outdata_filename = "/home/jimy/Desktop/NUMBERS/RealDataKamikazeResuts.csv"
-	output_dir = "/home/jimy/Desktop/NUMBERS/RealDataKamikazeResuts"
-
-	experiment_organizer = OPPTExperimentsOrganizer(controller_ids, safe_trajs_map,
-	output_dir, OPPTExperimentsOrganizer.SITUATION_REAL_DATA)
-	#experiment_organizer.process_organizer()
-	experiment_organizer.analyze_experiments_scenarios(outdata_filename, gen_plots = False, sample_size = 500)
-
-	
-
-	
-
-
-
 if __name__ == '__main__':
 	compute_real_data()
 

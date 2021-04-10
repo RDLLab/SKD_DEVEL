@@ -5,15 +5,13 @@ import json
 import os
 import subprocess
 import shutil
+import copy
 import fileinput
 from datetime import datetime
 import sys
 
 # Utils
-import OPPTLogAnalyser
-
-
-
+import SKDUtils
 
 class KamikazeTrajGenerator:
 	"""
@@ -30,9 +28,13 @@ class KamikazeTrajGenerator:
 		self.safe_traj_filepath = safe_traj_filepath
 		self.module_output_dir = module_output_dir
 		self.goal_area = goal_area
+		# Safe traj map record of attempted safe_traj
+		self.controller_scenarios = {}
+		# Record of generated files
+		self.scenario_log_records = []
 
 		# General configurations
-		gen_configs = self.get_skd_configurations()
+		gen_configs = SKDUtils.get_skd_configurations(self.config_path)
 		# Assert configurations exists
 		assert (gen_configs["kamikaze_traj_gen_configs"] != None), "No Safe Traj Gen Configs"
 		configs = gen_configs["kamikaze_traj_gen_configs"]
@@ -49,6 +51,7 @@ class KamikazeTrajGenerator:
 		# Load configurations
 		self.oppt_logs_dir = self.module_output_dir + "/oppt_logs" + "/%s/goal_%d_%d" % (self.timestamp, self.goal_area[0], self.goal_area[1])
 		self.oppt_experiment_cfgs = self.module_output_dir + "/oppt_experiment_cfgs" + "/%s/goal_%d_%d" % (self.timestamp, self.goal_area[0], self.goal_area[1])
+		self.kamikaze_scenario_record_dir = self.module_output_dir + "/scenario_records" + "/%s/goal_%d_%d" % (self.timestamp, self.goal_area[0], self.goal_area[1])
 		self.log_post_fix = self.timestamp + "_kamikaze_traj_gen_g_%d_%d" % (self.goal_area[0], self.goal_area[1])
 
 
@@ -73,18 +76,6 @@ class KamikazeTrajGenerator:
 
 		return True
 
-
-	def get_skd_configurations(self):
-	    """
-	    Loads the yaml configuration file for the assessment of a vehicle. The function returns a
-	    dictionary with the corresponding configuration fields
-	    and values for the assessment.
-	    """
-	    with open(self.config_path) as config_file:
-	        configurations = yaml.full_load(config_file)
-	        print(configurations)
-	        return configurations
-
 	def run_kamikaze_traj_generator(self, index_val, planner_executable_path):
 		"""
 		Executes the first part of the SKD process by loading
@@ -92,30 +83,50 @@ class KamikazeTrajGenerator:
 		"""
 		# Create a custom cfg for the safe trajectory scenario to be attempted
 		skd_python_dir = os.getcwd()
-		planner_config = self.gen_kamikaze_traj_oppt_cfg(index_val)
-		print(planner_config)
-		# Need to change the std out and sterr of this 
-		result = subprocess.run([planner_executable_path, "--cfg", planner_config], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-		print(result)
+		
+		for controller_multiplier in self.controller_multipliers:
+			scenario_log_records = []
+			planner_config = self.gen_kamikaze_traj_oppt_cfg(index_val, controller_multiplier)
+			# Need to change the std out and sterr of this 
+			result = subprocess.run([planner_executable_path, "--cfg", planner_config], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+			# Create a safe trajectory object
+			safe_trajectory_obj = SKDUtils.SafeTrajectory(self.safe_traj_filepath, self.goal_area, index_val)
+
+			# Create root output for scenario analysis
+			scenario_analysis_outdir = self.kamikaze_scenario_record_dir + "/analyser_%s_log" % (controller_multiplier) 
+			scenario_record = SKDUtils.ScenarioSituation(controller_multiplier, safe_trajectory_obj, 
+				self.get_kamikaze_log_filename(index_val, controller_multiplier), scenario_analysis_outdir)
+			scenario_log_records.append(scenario_record)
+			self.controller_scenarios[controller_multiplier] = copy.deepcopy(scenario_log_records)
 		print("=============================== KAMIKAZE TRAJS GENERATED ============================================")
 
 
-	def gen_kamikaze_traj_from_safe_file(self, num_safe_trajs = self.num_safe_trajs):
+	def gen_kamikaze_traj_from_safe_file(self, planner_executable_path, num_safe_trajs):
 		""" Generates kamikaze trajectories according to the configurations specified,
 		for all of the trajectories or until self.num_safe_trajs are examined """
-		for safe_traj_index in range(min(self.num_safe_trajs, num_safe_trajs))
-			self.run_kamikaze_traj_generator(safe_traj_index)
+		for safe_traj_index in range(0, min(self.num_safe_trajs, num_safe_trajs)):
+			self.run_kamikaze_traj_generator(safe_traj_index, planner_executable_path)
 
-
-
-	def get_oppt_log_filename(self):
-		return "log_ABT_Pedestrian_" + self.log_post_fix + ".log"
+	def get_kamikaze_log_filename(self, index, controller_multiplier):
+		return self.oppt_logs_dir + "/log_ABT_Pedestrian_" + self.log_post_fix + "_k_%d_m_%s.log" % (index, controller_multiplier)
 
 	def get_oppt_log_filepath(self):
 		return self.oppt_logs_dir + "/" + self.get_oppt_log_filename()
 
+	def get_oppt_log_filename(self):
+		return "log_ABT_Pedestrian_" + self.log_post_fix + ".log"
 
-	def gen_kamikaze_traj_oppt_cfg(self, safe_traj_index):
+
+	def get_kamikaze_scenario_record_dir(self):
+		return self.kamikaze_scenario_record_dir
+
+
+	def get_process_scenario_records(self):
+		return self.controller_scenarios
+
+
+
+	def gen_kamikaze_traj_oppt_cfg(self, safe_traj_index, controller_multiplier):
 		""" 
 		Generates a new ".cfg" with assessment options set to
 		file_options according to the desired goal area, goal margins, and initial state parameters"""
@@ -129,29 +140,21 @@ class KamikazeTrajGenerator:
 		cfg_dst = shutil.copyfile(planner_config_path, assessment_configs_path)
 
 		# Replace contents of file
-		self.sed_file(cfg_dst, "logPath =.*", "logPath = %s" % (self.oppt_logs_dir))
+		SKDUtils.sed_file(cfg_dst, "logPath =.*", "logPath = %s" % (self.oppt_logs_dir))
 		# Replace post fix to file name
-		self.sed_file(cfg_dst, "logFilePostfix =.*", "logFilePostfix = %s" % (self.log_post_fix))
+		SKDUtils.sed_file(cfg_dst, "logFilePostfix =.*", "logFilePostfix = %s" 
+			% (self.log_post_fix + "_k_%s_m_%s" % (safe_traj_index, controller_multiplier)))
 		# Replace number of samples 
-		self.sed_file(cfg_dst, "nRuns =.*", "nRuns = %d" % (self.num_attempts))
-
+		SKDUtils.sed_file(cfg_dst, "nRuns =.*", "nRuns = %d" % (self.num_attempts))
 		# Set the path for the safe file trajectory to be loaded into oppt
-		self.sed_file(cfg_dst, "safeTrajFilePath =.*", "safeTrajFilePath = %s" % (self.safe_traj_filepath))
-		
+		SKDUtils.sed_file(cfg_dst, "safeTrajFilePath =.*", "safeTrajFilePath = %s" % (self.safe_traj_filepath))
 		# Replace goal margins
-		self.sed_file(cfg_dst, "safeTrajIndex =.*", "safeTrajIndex = %s" % (safe_traj_index))
+		SKDUtils.sed_file(cfg_dst, "safeTrajIndex =.*", "safeTrajIndex = %s" % (safe_traj_index))
+		# Set Controller multiplier value tested against
+		SKDUtils.sed_file(cfg_dst, "controllerMultiplier =.*", "controllerMultiplier = %s" % (controller_multiplier))
 
 		return cfg_dst
 
-	def sed_file(self, filepath, old_txt, new_txt):
-		subprocess.call(["sed -i 's@%s@%s @' %s" % (old_txt, new_txt, filepath)], shell = True)
-
-	def list_to_str(self, list_var):
-		result = "["
-		for val in list_var:
-			result = result + " %s" % (val)
-		result = result + " ]"
-		return result
 
 
 

@@ -3,10 +3,12 @@ import numpy as np
 import scipy.stats as st
 import random
 import time
+
+
 # Local class to parse oppt log files
+import json
 import OPPTLogAnalyser
 import matplotlib.pyplot as plt
-import json
 import copy
 import math
 # Metric computation
@@ -169,8 +171,8 @@ class  OPPTGeneralGroupedScenarioAnalyser:
 		# Process frecht distance map
 		result_statistics = [(scenario_success/scenario_total_runs)]
 		result_statistics.extend(self.process_fretchet_dists_map(frechet_dists_map))
-		result_statistics.extend(self.process_fretchet_time_map(frechet_time_map))
-		result_statistics.extend(self.process_scenario_kamikaze_stats())
+		#result_statistics.extend(self.process_fretchet_time_map(frechet_time_map))
+		#result_statistics.extend(self.process_scenario_kamikaze_stats())
 		# Output the statistics in a numpy array form for easy data saving
 		return result_statistics
 

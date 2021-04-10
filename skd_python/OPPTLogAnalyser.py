@@ -4,8 +4,6 @@ import os
 import copy
 import csv
 import statistics
-import tkinter
-from tkinter import filedialog
 # import Trajectories.Transformations.Transforms as tf
 import numpy as np
 from pprint import pprint

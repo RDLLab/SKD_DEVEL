@@ -4,6 +4,16 @@
 SKD_ROOT_DIR=$(cd `dirname $0` && pwd)
 SKD_OPPT_DIR=${SKD_ROOT_DIR}/skd_oppt
 
+# Install mlpack dependency
+
+# Go to SKD_ROOT_DIR TO INSALL MLPACK
+cd ${SKD_ROOT_DIR}
+wget https://www.mlpack.org/files/mlpack-3.1.1.tar.gz
+tar -xvzpf mlpack-3.1.1.tar.gz
+mkdir mlpack-3.1.1/build && cd mlpack-3.1.1/build
+cmake ../
+make -j$(nproc) && sudo make install
+
 ## Install the plugins
 cd ${SKD_OPPT_DIR}/plugins
 

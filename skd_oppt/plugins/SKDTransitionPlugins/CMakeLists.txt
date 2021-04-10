@@ -1,5 +1,4 @@
 #find cppzmq wrapper, installed by make of cppzmq
-#find_package(cppzmq REQUIRED)
 
 # Options to use OPENCV
 include_directories(${MLPACK_LIBRARIES})

@@ -23,5 +23,5 @@ then
 fi
 cd build
 cmake -DCMAKE_INSTALL_PREFIX=/usr/local ..
-make -j$(nproc) && make install
+make -j$(nproc) && sudo make install
 

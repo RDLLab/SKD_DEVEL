@@ -73,7 +73,13 @@ public:
        
 
         // Setup knn structure to lookup intentions
-        data::Load("/home/jimy/jimy_oppt_ws/ncap_oppt_devel/NCAP_PYTHON/carla_scripts/carla_database/transition_dynamics/discretizeIntentions.csv", intentionDatabase_, true);
+        std::string intentions_model_file = generalOptions_->intentionModelFile;
+        std::string transition_dynamics_file = generalOptions_->dynamicsModelFile;
+        std::cout << "PRINTING PATHS" << std::endl;
+        std::cout << intentions_model_file << std::endl;
+        std::cout << transition_dynamics_file << std::endl;
+        getchar();
+        data::Load(intentions_model_file, intentionDatabase_, true);
         // Train on subdatabase
         auto& intentionDBSizes = size(intentionDatabase_);
         arma::mat subIntention = intentionDatabase_.submat(0,0, intentionDBSizes[0]-2, intentionDBSizes[1] - 1);
@@ -82,7 +88,7 @@ public:
 
 
         // Setup knn structure to lookup dynamics
-        data::Load("/home/jimy/jimy_oppt_ws/ncap_oppt_devel/NCAP_PYTHON/carla_scripts/carla_database/discretized_transition_data/10-02-21/dynamicsDB.csv", dynamicsDatabase_, true);
+        data::Load(transition_dynamics_file, dynamicsDatabase_, true);
         // Train on subdatabase
         auto& dynamicsDBSizes = size(dynamicsDatabase_);
         arma::mat subDynamics = dynamicsDatabase_.submat(0,0, dynamicsDBSizes[0]-3, dynamicsDBSizes[1] - 1);

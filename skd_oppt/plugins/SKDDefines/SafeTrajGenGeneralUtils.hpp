@@ -88,6 +88,9 @@ public:
     VectorFloat lowerBound;
     
     // Transition variables
+    std::string intentionModelFile;
+    std::string dynamicsModelFile;
+
     FloatType processError = 0.0;
     FloatType fixedStepTime = 0.3;
     VectorUInt actionSpaceDiscretization;
@@ -169,6 +172,17 @@ public:
         parser->addOption<VectorFloat>("generalOptions",
                                     "intentionDiscretizationLower",
                                     &SafeTrajGenGeneralOptions::intentionDiscretizationLower);
+
+
+        parser->addOption<std::string>("generalOptions",
+                                    "intentionModelFile",
+                                    &SafeTrajGenGeneralOptions::intentionModelFile);
+
+        parser->addOption<std::string>("generalOptions",
+                                    "intentionModelFile",
+                                    &SafeTrajGenGeneralOptions::intentionModelFile);
+
+
 
     
 
