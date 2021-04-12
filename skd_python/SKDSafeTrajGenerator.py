@@ -141,8 +141,8 @@ class SafeTrajGenerator:
 		cfg_dst = shutil.copyfile(planner_config_path, assessment_configs_path)
 
 		## HARD CODED RELATIVE PATH TO DYNAMICS MODEL FOR NOW
-		dynamics_dir = os.getcwd() + "/../skd_oppt/dynamics_files"
-		intention_model_file = dynamics_dir + "/discretizedIntentions.csv"
+		dynamics_dir = os.path.dirname(os.getcwd()) + "/skd_oppt/dynamics_files"
+		intention_model_file = dynamics_dir + "/discretizeIntentions.csv"
 		dynamics_model_file = dynamics_dir + "/dynamicsDB.csv"
 
 		# Replace contents of file

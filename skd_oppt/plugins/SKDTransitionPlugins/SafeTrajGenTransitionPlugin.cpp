@@ -78,7 +78,7 @@ public:
         std::cout << "PRINTING PATHS" << std::endl;
         std::cout << intentions_model_file << std::endl;
         std::cout << transition_dynamics_file << std::endl;
-        getchar();
+    
         data::Load(intentions_model_file, intentionDatabase_, true);
         // Train on subdatabase
         auto& intentionDBSizes = size(intentionDatabase_);
@@ -304,18 +304,6 @@ private:
         // getchar();
         // std::cout << "PRO WAS" << nextVelVal << std::endl;
 
-       //  unsigned seed2 = std::chrono::system_clock::now().time_since_epoch().count();
-       //  std::default_random_engine generator2(seed2); //gen(time(NULL))
-       // // std::default_random_engine generator;
-       //  std::uniform_real_distribution<double> finalValDist(-nextVelVal * 0.02, nextVelVal * 0.02);
-       //  double sample = finalValDist(generator2);
-        
-       //  // Propagate car according to local approximation of car dynamics
-       //  FloatType acceleration = (nextVelVal - carState[CAR_STATE_INFO::CAR_SPEED_LONGIT]) / carStepTime;
-
-       //  // Update car position according to S = Vo * t + 1/2 * (at^2)
-       //  FloatType nextCarLongit = carState[CAR_STATE_INFO::CAR_POS_LONGIT] + carState[CAR_STATE_INFO::CAR_SPEED_LONGIT] * carStepTime 
-       //                          + 0.5 * (acceleration * carStepTime * carStepTime);
 
         FloatType nextCarLongit = carState[CAR_STATE_INFO::CAR_POS_LONGIT] + deltaCarLongit;
         FloatType nextCarVel = clamp(carState[CAR_STATE_INFO::CAR_SPEED_LONGIT] + deltaCarVel, 0, 8.33);
@@ -326,9 +314,7 @@ private:
         VectorFloat nextCarState{nextCarLongit, nextCarVel, carState[CAR_STATE_INFO::CAR_STATE_INTENTION]};
 
         // // Debug here
-        // printVector(carState, "CAR STATE WAS");
-        // printVector(nextDynamics, "next Dynamics vector");
-        // std::cout << "HERE: nextVelVal= " << nextVelVal << std::endl;
+        
 
         return nextCarState;
 

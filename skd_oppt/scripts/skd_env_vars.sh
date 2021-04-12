@@ -1,7 +1,20 @@
 #!/bin/bash
+#!/bin/bash
 
-# Get the name of the dir where the script is located
-SCRIPTDIR=$(cd `dirname $0` && pwd)
+
+
+# Load appropiate environemnt variables
+
+# Source GAZEBO ENV VARS
+source /opt/ros/melodic/setup.sh
+
+# Source oppt ENV VARS
+source /usr/local/share/oppt/setup.sh
+
+
+SCRIPTDIR=`pwd`
+echo $SCRIPTDIR
+	
 SKD_OPPT_DIR=${SCRIPTDIR}/..
 
 export SKD_MODELS=${SKD_OPPT_DIR}/models

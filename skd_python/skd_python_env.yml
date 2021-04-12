@@ -1,0 +1,38 @@
+name: test_skd
+channels:
+  - anaconda
+  - defaults
+dependencies:
+  - _libgcc_mutex=0.1=main
+  - blas=1.0=mkl
+  - ca-certificates=2020.10.14=0
+  - certifi=2020.6.20=py36_0
+  - intel-openmp=2020.2=254
+  - ld_impl_linux-64=2.33.1=h53a641e_7
+  - libffi=3.3=he6710b0_2
+  - libgcc-ng=9.1.0=hdf63c60_0
+  - libgfortran-ng=7.3.0=hdf63c60_0
+  - libstdcxx-ng=9.1.0=hdf63c60_0
+  - mkl=2019.4=243
+  - mkl-service=2.3.0=py36he904b0f_0
+  - mkl_fft=1.2.0=py36h23d657b_0
+  - mkl_random=1.1.0=py36hd6b4f25_0
+  - ncurses=6.2=he6710b0_1
+  - numpy=1.19.1=py36hbc911f0_0
+  - numpy-base=1.19.1=py36hfa32c7d_0
+  - openssl=1.1.1h=h7b6447c_0
+  - pip=21.0.1=py36h06a4308_0
+  - python=3.6.12=hcff3b4d_2
+  - pyyaml=5.3.1=py36h7b6447c_1
+  - readline=8.1=h27cfd23_0
+  - scipy=1.5.2=py36h0b6359f_0
+  - setuptools=52.0.0=py36h06a4308_0
+  - six=1.15.0=py_0
+  - sqlite=3.35.4=hdfb4753_0
+  - tk=8.6.10=hbc83047_0
+  - wheel=0.36.2=pyhd3eb1b0_0
+  - xz=5.2.5=h7b6447c_0
+  - yaml=0.2.5=h7b6447c_0
+  - zlib=1.2.11=h7b6447c_3
+prefix: /home/ruminahui/anaconda/envs/test_skd
+

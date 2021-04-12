@@ -179,8 +179,8 @@ public:
                                     &SafeTrajGenGeneralOptions::intentionModelFile);
 
         parser->addOption<std::string>("generalOptions",
-                                    "intentionModelFile",
-                                    &SafeTrajGenGeneralOptions::intentionModelFile);
+                                    "dynamicsModelFile",
+                                    &SafeTrajGenGeneralOptions::dynamicsModelFile);
 
 
 
