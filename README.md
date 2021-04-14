@@ -40,9 +40,9 @@ skd@skd:$ conda env create -f skd_python_env.yml
 
 ### Running the SKD Assessment Mechanism
 To SKD Assessment is broken into three main stages. 
-	- Safety Trajectory Generation
-	- Kamikaze Trajectory Generation
-	- SKD Computation
+- Safety Trajectory Generation
+- Kamikaze Trajectory Generation
+- SKD Computation
 
 To run the whole system in a single program, 
 ```
