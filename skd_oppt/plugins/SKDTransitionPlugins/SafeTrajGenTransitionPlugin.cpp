@@ -78,6 +78,7 @@ public:
         std::cout << "PRINTING PATHS" << std::endl;
         std::cout << intentions_model_file << std::endl;
         std::cout << transition_dynamics_file << std::endl;
+
     
         data::Load(intentions_model_file, intentionDatabase_, true);
         // Train on subdatabase
@@ -93,7 +94,6 @@ public:
         auto& dynamicsDBSizes = size(dynamicsDatabase_);
         arma::mat subDynamics = dynamicsDatabase_.submat(0,0, dynamicsDBSizes[0]-3, dynamicsDBSizes[1] - 1);
         dynamicsNN_ = NeighborSearch<NearestNeighborSort, ManhattanDistance>(subDynamics);
-
        
         return true;
     }

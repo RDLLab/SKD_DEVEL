@@ -8,7 +8,7 @@ SKD_ROOT_DIR=$(cd `dirname $0` && pwd)
 cd ${SKD_ROOT_DIR}
 tar -xvzpf mlpack-3.4.2.tar.gz
 mkdir mlpack-3.4.2/build && cd mlpack-3.4.2/build
-cmake ../
+cmake -D USE_OPENMP=OFF ../
 make -j$(nproc) && sudo make install
 
 
@@ -23,18 +23,7 @@ cd build
 
 ## Build and install OPPT
 # Set flag for OPPT INSTALL MACRO
-cmake -DCMAKE_INSTALL_DATA_DIR=${PWD} ..
+cmake -DCMAKE_INSTALL_DATADIR=${PWD} ..
 make -j$(nproc) && make install
 
-
-# INSTALL ANACONDA FOR PYTHON DEPENDENCIES IN ENV
-cd /tmp
-#curl -O https://repo.anaconda.com/archive/Anaconda3-2019.03-Linux-x86_64.sh
-bash ./Anaconda3-2019.03-Linux-x86_64.sh -b -p $HOME/anaconda
-source ${HOME}/.bashrc
-cd ${HOME}/anaconda/bin && conda init
-source ${HOME}/.bashrc
-
-
-# Ready to launch
 

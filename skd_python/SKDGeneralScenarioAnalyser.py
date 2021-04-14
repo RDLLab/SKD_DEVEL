@@ -488,20 +488,19 @@ class  OPPTGeneralGroupedScenarioAnalyser:
 
 		# Compile data from all the analysers associated with this scenario
 		for experiment_analyser in self.analysers:
-			print("EXAMINING ANALYSER FROM")
-			print(experiment_analyser.get_analyser_filepath())
+			# print("EXAMINING ANALYSER FROM")
+			# print(experiment_analyser.get_analyser_filepath())
 			analyser_total = experiment_analyser.get_num_runs()
 			analyser_success = experiment_analyser.get_num_successful()
-			print("TOTAL=%d 	SUCCESS=%d" % (analyser_total, analyser_success))
+			#print("TOTAL=%d 	SUCCESS=%d" % (analyser_total, analyser_success))
 			# Add it to the tally
 			total_runs_processed += analyser_total
 			total_successful += analyser_success
-			#input()
 
 
 
-		print("PRINTING SCENARIO STATS:%s " % (self.scenario_info))
-		print("TOTAL =  %d and SUCCESS =  %d" % (total_runs_processed, total_successful))
+		# print("PRINTING SCENARIO STATS:%s " % (self.scenario_info))
+		# print("TOTAL =  %d and SUCCESS =  %d" % (total_runs_processed, total_successful))
 
 
 		return total_successful, total_runs_processed

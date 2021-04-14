@@ -123,7 +123,7 @@ class OPPTLogAnalyser:
 			os.makedirs(run_path)
 			os.makedirs(plot_path)
 		except OSError as error: 
-			print(error) 
+			print("Directories to create already exist: %s \n %s" % (run_path, plot_path)) 
 
 		# Iterate over file
 		run_num = 0 

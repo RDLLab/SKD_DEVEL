@@ -83,18 +83,16 @@ def main():
 
 	# Generate kamikaze trajectories for each safe_traj_file 
 	for safe_generator in safe_traj_generators:
-		print("Generating Kamikaze Trajectories")
-		print("Safe Traj file: %s, Safe_traj index: %s")
+		print("Generating Kamikaze Trajectories from %s" % (safe_generator.get_safe_traj_filepath()))
 		# Get file path
 		safe_traj_file_path = safe_generator.get_safe_traj_filepath()
 		kamikaze_goal_area = safe_generator.get_goal_area()
 		num_safe_trajs = safe_generator.get_num_trajs_generated()
-		print(safe_traj_file_path)
 		# Create Kamikaze Gen
 		kamikaze_traj_gen = SKDKamikazeTrajGenerator.KamikazeTrajGenerator(safe_traj_file_path, kamikaze_goal_area, config_path, kamikaze_traj_gen_module_outdir, timestamp)
 		kamikaze_traj_gen.gen_kamikaze_traj_from_safe_file(planner_exec_path, num_safe_trajs)
 		kamikaze_traj_generators.append(kamikaze_traj_gen)
-		print(kamikaze_traj_gen.get_process_scenario_records())
+		#print(kamikaze_traj_gen.get_process_scenario_records())
 
 	print("======================= TRAJECTORY GENERATION STAGES COMPLETE ================================")
 

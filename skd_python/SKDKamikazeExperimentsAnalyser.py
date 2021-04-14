@@ -52,9 +52,7 @@ class KamikazeExperimentsOrganizer:
 		# Header for csv
 		txt_header = "multiplier_val,kamikaze_success_rate,"
 		txt_header += "frechet_sample_size,fretchet_sum,frechet_means,fretchet_var,frechet_grouped_var,frechet_95_ci_low_,frechet_95_ci_high,total_attempts,total_successful"
-		txt_header += "fretchet_timings_sum(ms),fretchet_timings_means(ms),fretchet_timings_var,frechet_timings_grouped_var,fretchet_timings_95_ci_low_,fretchet_timings_95_ci_high,"
-		txt_header += "scenario_kamikaze_timings_size,scenario_kamikaze_timings_mean(ms),scenario_kamikaze_timings_var,"
-		txt_header += "scenario_kamikaze_timings_95_ci_low,scenario_kamikaze_timings_95_ci_high"
+		
 		
 		np.savetxt(outfilepath, np_experiments_data, delimiter=",", header=txt_header, comments='')
 
