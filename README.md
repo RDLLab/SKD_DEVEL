@@ -142,16 +142,8 @@ skd@skd:$ python3 SKDAggregator.py -o ${PWD}/experiments -cfg config/config.yaml
 
 ### Running Trajectory Generation Mechanism
 The trajectory generation components can also be run in separate separately. 
-To do so, make sure that the appropiate enviroment variables are set. This can be done by running the following steps from "run_skd_assessment.sh":
-```
-################### SET ENVIRONMENT RESOURCES ####################
-# # Set environment and agensts models for use in oppt
-skd@skd:$ cd ${SKD_ROOT_DIR}/skd_oppt/scripts
-# Source from inside dir 
-skd@skd:$ source skd_env_vars.sh
-```
-
-Then, to run each module:
+To do so, make sure that the appropiate enviroment variables are set as explained 
+in "Running the SKD Assessment Mechanism". Then, to run each module:
 ```
 # For Safe Traj Generation
 skd@skd:$ mkdir SafeTrajOutDir
