@@ -229,21 +229,32 @@ def main():
 		help='Parent to output directory of the module')
 
 
+	argparser.add_argument(
+		'-p', '--planner',
+		metavar='SafeTrajGenModuleOutpuDir',
+		type=str,
+		help='Parent to output directory of the module')
+
+
 	# Parse arguments
 	args = argparser.parse_args()
 	config_path = args.config
 	module_outdir = args.outdir
+	planner_exec_path = args.planner
 
 	print(config_path)
 	print(module_outdir)
 
-	# Create timestamp
-	timestamp = datetime.now().strftime("%m-%d-%H-%M")
-	
-	# Create a SafeTrajGenerator
-	planner_exec_path = "/home/jimy/jimy_oppt_ws/opptv5/bin/abt"
-	safe_traj_gen = SafeTrajGenerator(config_path, 0, module_outdir, timestamp)
-	safe_traj_gen.run_safe_traj_generator(planner_exec_path)
+	# Generate safe trajectories
+	general_configs = SKDUtils.get_skd_configurations(config_path)
+	print(general_configs)
+	goal_areas = general_configs["safe_traj_gen_configs"]["goal_areas"]
+	for goal_area_index in range(len(goal_areas)):
+		print("ASSESSING GOAL AREA")
+		# Create a SafeTrajGenerator for the goal area
+		safe_traj_gen = SKDSafeTrajGenerator.SafeTrajGenerator(config_path, goal_area_index, safe_traj_gen_module_outdir, timestamp)
+		safe_traj_gen.run_safe_traj_generator(planner_exec_path)
+		safe_traj_generators.append(safe_traj_gen)
 
 
 if __name__ == '__main__':

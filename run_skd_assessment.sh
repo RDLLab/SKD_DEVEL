@@ -3,11 +3,14 @@
 # Get the name of the directory where the repository is located
 SKD_ROOT_DIR=$(cd `dirname $0` && pwd)
 
+# activate conda environment
+conda activate skd_conda
+
 
 # # Set environment and agensts models for use in oppt
-# cd ${SKD_ROOT_DIR}/skd_oppt/scripts
-# # Source from inside dir 
-# source skd_env_vars.sh
+cd ${SKD_ROOT_DIR}/skd_oppt/scripts
+# Source from inside dir 
+source skd_env_vars.sh
 
 # Run the assessment system and output into an experiments dir
 # Get the name of the directory where the repository is located

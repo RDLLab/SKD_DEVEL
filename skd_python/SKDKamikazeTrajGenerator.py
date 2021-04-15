@@ -175,17 +175,51 @@ def main():
 		type=str,
 		help='Parent to output directory of the module')
 
+	argparser.add_argument(
+		'-oppt', '--planner',
+		metavar='planner_exec_path',
+		type=str,
+		help='path to configuration file for SKD Kamikaze Traj Generation')
+
+
 
 	# Parse arguments
 	args = argparser.parse_args()
 	config_path = args.config
 	module_outdir = args.outdir
-
-	print(config_path)
-	print(module_outdir)
-
+	planner_path = args.planner
+	print("Generating kamikaze trajectories from configurations in: %s" % (config_path))
+	print("Output directory: %s" % (module_outdir))
 	# Create timestamp
 	timestamp = datetime.now().strftime("%m-%d-%H-%M")
+	print("Timestamp: %s" % (timestamp))
+	# Load configs
+	configs = SKDUtils.get_skd_configurations(config_path)
+	print("Kamikaze Experiment Configs:")
+	print(Configs)
+	# Make sure length of files, goal areas and num_trajs are the same
+	exp_configs = configs["kamikaze_experiment_configs"]
+	safe_traj_files = exp_configs["safe_traj_paths"]
+	goal_areas = exp_configs["goal_areas"]
+	num_safe_trajs = exp_configs["num_safe_trajs"]
+	# Check for correct config
+	assert (len(safe_traj_files) == len(goal_areas)), "Lengths of file paths and goal areas do not match"
+	assert (len(goal_areas) == len(num_safe_trajs)), "Lengths of goal areas and num_safe_trajs do not match"
+	# Run the experiments
+	num_cases = len(safe_traj_files)
+	for case_num in range(num_cases):
+		case_safe_traj_path = safe_traj_files[case_num]
+		case_goal_area = goal_areas[case_num]
+		case_num_safe_trajs = num_safe_trajs[case_num]
+
+		kamikaze_generator = KamikazeTrajGenerator(case_safe_traj_path, case_goal_area, config_path, module_outdir, timestamp)
+		kamikaze_generator.gen_kamikaze_traj_from_safe_file(planner_path, case_num_safe_trajs)
+
+
+
+
+
+
 	
 	
 

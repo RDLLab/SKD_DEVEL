@@ -4,15 +4,18 @@
 # Get the name of the directory where the repository is located
 ENVSDIR=`pwd`
 
+# Reference dir to locate all models and plugins	
+SKD_OPPT_DIR=${ENVSDIR}/..
+echo ${SKD_OPPT_DIR}
+OPPT_INSTALL_DIR=${SKD_OPPT_DIR}/../opptv5/src/build
+
 # Source GAZEBO ENV VARS
 source /opt/ros/melodic/setup.sh
 
 # Source oppt ENV VARS
-source /usr/local/share/oppt/setup.sh
+source ${OPPT_INSTALL_DIR}/share/oppt/setup.sh
 
 
-# Reference dir to locate all models and plugins	
-SKD_OPPT_DIR=${ENVSDIR}/..
 
 
 # Export environment variables so planner can load models
