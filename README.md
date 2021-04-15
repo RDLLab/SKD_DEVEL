@@ -17,7 +17,7 @@ planner used in the assessment mechanism.
 The whole system installation can be run in one script by running the install script with the following options:
 ```
 # Inside the repository root (e.g SKD_DEVEL)
-skd@skd:$ 	chmod +x skd_full_install.sh && ./skd_full_install.sh -i true -d ${PWD}/opptv5/src/build -c true
+skd@skd:$ chmod +x skd_full_install.sh && ./skd_full_install.sh -i true -d ${PWD}/opptv5/src/build -c true
 
 # The script has the following options
 [-i | --install_oppt] set to [true|false]: This argument defines if the "OPPT" toolkit should be installed as part of the installtion process.
@@ -30,6 +30,7 @@ If set to false, it is assumed that anaconda is installed. The installation proc
 ### Individual component installation
 #### Install the planner component by running 
 ```
+skd@skd:$ cd <SKD_DEVEL_ROOT>
 skd@skd:$ chmod +x oppt_install.sh && ./oppt_install.sh --install_dir <install_dir_path>
 ```	
 
@@ -41,6 +42,7 @@ This can also be added to the local ${HOME}/.bashrc file.
 ```
 Set env vars to link with oppt share libs
 skd@skd:$ export oppt_DIR=<oppt_install_location>/lib/cmake/oppt
+skd@skd:$ cd <SKD_DEVEL_ROOT>
 skd@skd:$ chmod +x skd_oppt_install.sh && ./skd_oppt_install.sh
 ```
 
@@ -48,10 +50,12 @@ skd@skd:$ chmod +x skd_oppt_install.sh && ./skd_oppt_install.sh
 An example installation script is provided to install anaconda and create the appropiate conda environment. 
 If conda is already installed in the machine, proceed to the step to create the conda environment.
 ```
+skd@skd:$ cd <SKD_DEVEL_ROOT>
 skd@skd:$ chmod +x install_conda_env.sh && ./install_conda_env.sh -c [true|false]
 
 If anaconda is installed, create the environmen directly by running the following 
 inside the "skd_python" directory:
+skd@skd:$ cd <SKD_DEVEL_ROOT>/skd_oppt/conda_envs
 skd@skd:$ conda env create -f skd_python_env.yml
 ```
 
@@ -71,8 +75,8 @@ skd@skd:$ conda init bash
 skd@skd:$ conda activate skd_conda
 ```
 
-""" Go to skd_oppt_module """
 ```
+""" Go to skd_oppt_module """
 skd@skd:$ cd <SKD_ROOT_DIR>/skd_oppt/scripts
 # Source the env var file. Please note, this must be fone inside <SKD_ROOT_DIR>/skd_oppt/scripts
 skd@skd:$ source skd_env_vars.sh
@@ -158,5 +162,6 @@ skd@skd:$ mkdir KamikazeTrajOutDir
 skd@skd:$ python3 SKDKamikazeTrajGenerator.py -o ${PWD}/KamikazeTrajOutDir -cfg config/config.yaml
 
 ```
+
 
 
