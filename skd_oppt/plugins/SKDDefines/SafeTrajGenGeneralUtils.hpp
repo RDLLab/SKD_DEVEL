@@ -50,7 +50,7 @@ enum CAR_DIMENSIONS{CAR_LENGTH, CAR_WIDTH, CAR_HEIGHT};
 enum PED_DIMENSIONS{PED_RADIUS, PED_HEIGHT};
 
 // ENUMERATED GOAL ARES
-enum GOAL_AREAS{GOAL_LONGIT, GOAL_HOZ};
+enum GOAL_BOUNDS{GOAL_LONGIT_MIN, GOAL_LONGIT_MAX, GOAL_HOZ_MIN, GOAL_HOZ_MAX};
 
 // ENUMERATED POINTS FOR LOADED SAFE TRAJS
 enum SAFE_TRAJ{SAFE_PED_LONGIT, SAFE_PED_HOZ};
@@ -80,8 +80,7 @@ public:
 
 
     // Goal location for the pedeinitialVelocitystrian for the plugins in the "safety case"
-    VectorFloat safetyGoal;
-    VectorFloat goalMargins;
+    VectorFloat goalBounds;
 
     // Initial belief variables
     VectorFloat upperBound;
@@ -137,8 +136,8 @@ public:
                                    &SafeTrajGenGeneralOptions::controllerMultiplier);
 
         parser->addOption<VectorFloat>("generalOptions",
-                                       "goalMargins",
-                                   &SafeTrajGenGeneralOptions::goalMargins);
+                                       "goalBounds",
+                                   &SafeTrajGenGeneralOptions::goalBounds);
     
         parser->addOption<std::string>("generalOptions",
                                        "carLinkName",
@@ -155,11 +154,6 @@ public:
         parser->addOption<VectorFloat>("generalOptions",
                                      "pedDimensions",
                                      &SafeTrajGenGeneralOptions::pedDimensions);
-
-        // Parse safety goal location
-        parser->addOption<VectorFloat>("generalOptions",
-                                     "safetyGoalArea",
-                                     &SafeTrajGenGeneralOptions::safetyGoal);
 
 
         parser->addOption<VectorFloat>("generalOptions",

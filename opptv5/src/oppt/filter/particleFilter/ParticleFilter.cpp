@@ -213,48 +213,9 @@ FilterResultPtr ParticleFilter::filter(const FilterRequestPtr& filterRequest)
         } 
     }
 
-    // Refill particles if filter depletes particles
     if (particleCounter == 0) {
         // We couldn't sample any particles
-        // Replenish particles from previous state, and current observation
-        VectorParticles propagatedParticles = filterResult->particles;
-        VectorFloat obsSeen = filterRequest->observation->as<VectorObservation>()->asVector();
-        
-        // Refill particles based on noisy matching of prev state and current obs with equal weight
-        for(size_t refillIndex = 0; refillIndex < propagatedParticles.size(); ++refillIndex){
-            ParticlePtr currentParticle = propagatedParticles[refillIndex];
-            VectorFloat particleState = currentParticle->getState()->as<VectorState>()->asVector();
-            VectorFloat approxState(particleState);
-
-            // Add noise
-            unsigned seed1 = std::chrono::system_clock::now().time_since_epoch().count();
-            std::default_random_engine generator(seed1); //gen(time(NULL))
-
-            std::uniform_real_distribution<FloatType> distribution(0, 0.5);
-            FloatType sample = (FloatType) distribution(generator);
-
-            // Approximate ped info with same ped info
-            for(size_t ped_info_index = 0; ped_info_index < 2; ++ped_info_index){
-                approxState[ped_info_index] = particleState[ped_info_index];
-            }
-
-            // Adjust vehicle location based on noise obs
-            for(size_t obs_index = 0; obs_index < 2; ++obs_index){
-                FloatType obs_noise = (FloatType) distribution(generator);
-                approxState[obs_index + 2] = particleState[obs_index + 2] + obsSeen[obs_index] + obs_noise; 
-            }
-
-
-            // Create Robot State based on prev state and create a new particle based on that
-            RobotStateSharedPtr newApproxState = std::make_shared<VectorState>(approxState);
-            // Can set user data here
-            newApproxState->setUserData(currentParticle->getState()->getUserData());
-            replenishedParticlesVec[refillIndex] = std::make_shared<Particle>(newApproxState);
-            particleCounter++;
-        }
-
-        // filterResult->particles.resize(0);
-        WARNING("subsequent particles have weight 0. Particles have been refilled");
+        filterResult->particles.resize(0);
         WARNING("All subsequent particles have 0 weight. Check our calcLikelihood function in your ObservationPlugin");
         return filterResult;
     }

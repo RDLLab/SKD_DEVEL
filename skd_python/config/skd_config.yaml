@@ -1,0 +1,22 @@
+kamikaze_traj_gen_configs:
+  attempts_per_goal: 2
+  controller_multipliers:
+  - 0.5
+  kamikaze_cfg_file: /home/jimy/SKD_DEVEL/skd_python/config/KamikazeTrajGen.cfg
+  max_trajs_per_file: 2
+  safe_traj_files: []
+safe_traj_gen_configs:
+  goal_bounds:
+  - - 119
+    - 120
+    - -4.75
+    - -3.75
+  initial_state:
+  - 120
+  - 3
+  - 100
+  - -2
+  - 0
+  - 3
+  safe_gen_cfg_file: /home/jimy/SKD_DEVEL/skd_python/config/SafeTrajGen.cfg
+  safe_trajs_attempts_per_goal: 2

@@ -53,7 +53,6 @@ fi
 
 
 # # Export oppt libraries for installed oppt dir
-# # Proceed with skd_oppt install
 # set oppt_DIR for CMake to find oppt
 export oppt_DIR=${OPPT_INSTALL_DIR}/lib/cmake/oppt
 echo "INSTALLING SKD_OPPT PLUGINS AND ENVIRONMENT MODELS"

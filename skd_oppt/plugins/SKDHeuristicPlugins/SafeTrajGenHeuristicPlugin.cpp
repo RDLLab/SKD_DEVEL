@@ -60,10 +60,14 @@ public:
         VectorFloat pedLocation{stateVec[STATE_INFO::PED_LONGIT], stateVec[STATE_INFO::PED_HORIZONTAL]};
         VectorFloat carLocation{stateVec[STATE_INFO::CAR_LONGIT], stateVec[STATE_INFO::CAR_HORIZONTAL]};
 
-        // Calculate relative distance on both dimensions
-        VectorFloat goalArea = generalOptions_->safetyGoal;
-        FloatType transverseDist = stateVec[STATE_INFO::PED_HORIZONTAL] - (goalArea[GOAL_AREAS::GOAL_HOZ]) ; 
-        FloatType longitDist = stateVec[STATE_INFO::PED_LONGIT] - (goalArea[GOAL_AREAS::GOAL_LONGIT]) ; 
+        // // Calculate relative distance on both dimensions
+        VectorFloat goalBounds = generalOptions_->goalBounds;
+        FloatType midGoalLongit = (goalBounds[GOAL_BOUNDS::GOAL_LONGIT_MAX] + goalBounds[GOAL_BOUNDS::GOAL_LONGIT_MIN]) / 2;
+        FloatType midGoalHoz = (goalBounds[GOAL_BOUNDS::GOAL_HOZ_MAX] + goalBounds[GOAL_BOUNDS::GOAL_HOZ_MIN]) / 2;
+
+        // Estimate Manhattan distance between ped and goal margin
+        FloatType transverseDist = stateVec[STATE_INFO::PED_HORIZONTAL] - midGoalHoz ; 
+        FloatType longitDist = stateVec[STATE_INFO::PED_LONGIT] - midGoalLongit; 
 
        
         // // Steps until longitudinal margin

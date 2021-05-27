@@ -1,0 +1,17 @@
+car_controller_type: basic
+max_num_steps: 25
+multiplier_ids:
+- 0.5
+- 0.625
+- 0.75
+- 0.875
+- 1
+- 1.05
+- 1.1
+- 1.125
+- 1.15
+num_runs: 100
+safe_trajectory_files:
+- /home/ruminahui/SKD_DEVEL/skd_python/skd_collision_experiments/collision_environment/__init__.py
+- /home/ruminahui/SKD_DEVEL/skd_python/skd_collision_experiments/collision_environment/collision_env_utils.py
+- /home/ruminahui/SKD_DEVEL/skd_python/skd_collision_experiments/collision_environment/collision_environment.py

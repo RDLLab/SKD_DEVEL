@@ -43,32 +43,34 @@ public:
         parseOptions_<KamikazeTrajGenGeneralOptions>(optionsFile);
 
         // Retrieve pointer to options file
-        KamikazeTrajGenGeneralOptions* generalOptions = static_cast<KamikazeTrajGenGeneralOptions*>(options_.get());
-        carLinkName_ = generalOptions->carLinkName;
-        pedLinkName_ = generalOptions->pedLinkName;
+        generalOptions_= static_cast<KamikazeTrajGenGeneralOptions*>(options_.get());
+        carLinkName_ = generalOptions_->carLinkName;
+        pedLinkName_ = generalOptions_->pedLinkName;
 
         unsigned int numDimensions = robotEnvironment_->getRobot()->getStateSpace()->getNumDimensions();
         cout << "Num dim = " << numDimensions << endl;
-        cout << "lower bound size " << generalOptions->lowerBound.size() << endl;
-        if (generalOptions->lowerBound.size() != numDimensions)
+        cout << "lower bound size " << generalOptions_->lowerBound.size() << endl;
+        
+
+        if (generalOptions_->lowerBound.size() != numDimensions)
             ERROR("Lower bound for the uniform distribution doesn't match state space dimension");
-        if (generalOptions->upperBound.size() != numDimensions)
+        if (generalOptions_->upperBound.size() != numDimensions)
             ERROR("Upper bound for the uniform distribution doesn't match state space dimension");
-        for (size_t i = 0; i != generalOptions->lowerBound.size(); ++i) {
-            if (generalOptions->lowerBound[i] > generalOptions->upperBound[i])
+        for (size_t i = 0; i != generalOptions_->lowerBound.size(); ++i) {
+            if (generalOptions_->lowerBound[i] > generalOptions_->upperBound[i])
                 ERROR("Lower bound for initial belief must be smaller than upper bound");
         }
 
         // Random engine for distributions
         auto randomEngine = robotEnvironment_->getRobot()->getRandomEngine();
         uniformDistribution_ =
-            std::make_unique<UniformDistribution<FloatType>>(generalOptions->lowerBound, generalOptions->upperBound, randomEngine);
+            std::make_unique<UniformDistribution<FloatType>>(generalOptions_->lowerBound, generalOptions_->upperBound, randomEngine);
 
 
         // Load safe trajectories from file
-        std::ifstream safeTrajFile(generalOptions->safeTrajFilePath);
+        std::ifstream safeTrajFile(generalOptions_->safeTrajFilePath);
         json safeTrajsJson = json::parse(safeTrajFile);
-        safeTraj_ = safeTrajsJson[generalOptions->safeTrajKey].get<TrajData>();
+        safeTraj_ = safeTrajsJson[generalOptions_->safeTrajKey].get<TrajData>();
 
         for(auto& point : safeTraj_){
             printVector(point, "CURRENT POINT");
@@ -85,12 +87,16 @@ public:
         //VectorFloat initialStateVec = toStdVec<FloatType>(uniformDistribution_->sample(1).col(0));
         const FloatType initialIntention = CAR_INTENTIONS::CRUISING;
         const FloatType initialSpeed = 0;
-        // Initial locations
+        // Initial location of pedestrian in safe trajectory
         VectorFloat pedInit = safeTraj_[0];
+        // Initial car start pos
+        VectorFloat carStartPos = generalOptions_->carStartPos;
         // Fix an initial state according to the real life data estimate
-        VectorFloat initialStateVec{pedInit[REAL_TRAJ_DATA::TRAJ_LONGIT], pedInit[REAL_TRAJ_DATA::TRAJ_HOZ],
-                                100, -1.7, 
+        VectorFloat initialStateVec{pedInit[REAL_TRAJ_DATA::TRAJ_LONGIT], pedInit[REAL_TRAJ_DATA::TRAJ_HOZ],    
+                                carStartPos[CAR_STATE_INFO::CAR_POS_LONGIT], carStartPos[1], 
                                 initialSpeed, initialIntention};
+
+        printVector(initialStateVec, "initiStateVec");
 
         // Set the corresponding pose for the links in the environment according to state vector
         gazebo::physics::Link* carLink = linkMapInit_.at(carLinkName_);
@@ -170,6 +176,9 @@ private:
 private:
 
     VectorFloat initialStateVec_;
+
+    // General options
+    KamikazeTrajGenGeneralOptions* generalOptions_;
 
     std::unique_ptr<Distribution<FloatType>> uniformDistribution_;
 

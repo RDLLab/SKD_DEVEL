@@ -8,7 +8,7 @@
       <pose>0 0 0.65 0 0 0</pose>
     </include>
 
-    <!-- Model of the cylinder cup  -->
+  <!-- Model of the cylinder cup  -->
     <model name="Pedestrian">
       <link name='PedestrianLink'>
           <pose>20 0 0.93 0 -0 0</pose>
@@ -27,6 +27,52 @@
                 <length>1.86</length>        
               </cylinder>
             </geometry>          
+          </visual>
+      </link>
+    </model>   
+
+
+     <!-- Model of the cylinder cup  -->
+    <model name="GoalStrip">
+      <link name='GoalStrip'>
+          <pose>0 -4 0.93 0 -0 0</pose>
+          <visual name='GoalStripVisual'>
+            <geometry>
+              <box>
+                <size>1000 0.25 1</size>
+              </box>
+            </geometry>          
+            <material>
+              <ambient> 1 1 0 1 </ambient>
+            </material>  
+          </visual>
+      </link>
+
+      <link name='MidLane'>
+          <pose>0 0 0.93 0 -0 0</pose>
+          <visual name='MidLaneVisual'>
+            <geometry>
+              <box>
+                <size>1000 0.1 1</size>
+              </box>
+            </geometry>     
+            <material>
+              <ambient> 1 1 0 1 </ambient>
+            </material>     
+          </visual>
+      </link>
+
+       <link name='StartingStrip'>
+          <pose>0 3.75 0.93 0 -0 0</pose>
+          <visual name='MidLaneVisual'>
+            <geometry>
+              <box>
+                <size>1000 0.1 1</size>
+              </box>
+            </geometry>     
+            <material>
+              <ambient> 1 1 0 1 </ambient>
+            </material>     
           </visual>
       </link>
     </model>   

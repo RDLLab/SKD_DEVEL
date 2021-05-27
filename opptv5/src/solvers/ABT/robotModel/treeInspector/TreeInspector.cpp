@@ -26,8 +26,8 @@ void TreeInspector::makeTreeStatistics(const abt::Simulator* simulator, std::ofs
     os << "TotalNumNodesInTree: " << nNodes << endl;
     os << "NumNodesSubtree: " << nNodesSubtree << endl;
     os << "TotalNumPropagations: " << totalNumDynamics << endl;
-    cout << "Total Tree Depth: " << tTreeDepth << endl;
-    cout << "Relative Tree Depth: " << rTreeDepth << endl;
+    //cout << "Total Tree Depth: " << tTreeDepth << endl;
+    //cout << "Relative Tree Depth: " << rTreeDepth << endl;
     PRINT("Nodes In Tree: " + std::to_string(nNodes));
     PRINT("Nodes After Current Belief: " + std::to_string(nNodesSubtree));
     //cout << "Total num dynamics: " << totalNumDynamics << endl;

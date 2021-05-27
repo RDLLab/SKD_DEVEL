@@ -48,8 +48,10 @@ public :
     virtual bool isTerminal(const PropagationResultSharedPtr& propagationResult) override {  
         VectorFloat nextStateVector = propagationResult->nextState.get()->as<VectorState>()->asVector();
         auto userData = static_cast<SKDUserData*>(propagationResult->nextState->getUserData().get());
-        VectorFloat goalArea = generalOptions_->safetyGoal;
-        VectorFloat goalMargins = generalOptions_->goalMargins;
+        
+
+        // Retrieve goal bounds
+        VectorFloat goalBounds = generalOptions_->goalBounds;
 
          // Terminal state if a collision happens
         if(userData->collisionReport->collides){
@@ -57,10 +59,10 @@ public :
         }
         
         // Terminal if in the vicinity of the goal area
-        FloatType maxBoundLongit = goalArea[GOAL_AREAS::GOAL_LONGIT] + goalMargins[GOAL_AREAS::GOAL_LONGIT];
-        FloatType minBoundLongit = goalArea[GOAL_AREAS::GOAL_LONGIT] - goalMargins[GOAL_AREAS::GOAL_LONGIT];
-        FloatType maxBoundHoz = goalArea[GOAL_AREAS::GOAL_HOZ] + goalMargins[GOAL_AREAS::GOAL_HOZ];
-        FloatType minBoundHoz = goalArea[GOAL_AREAS::GOAL_HOZ] - goalMargins[GOAL_AREAS::GOAL_HOZ];
+        FloatType maxBoundLongit = goalBounds[GOAL_BOUNDS::GOAL_LONGIT_MAX];
+        FloatType minBoundLongit = goalBounds[GOAL_BOUNDS::GOAL_LONGIT_MIN];
+        FloatType maxBoundHoz = goalBounds[GOAL_BOUNDS::GOAL_HOZ_MAX];
+        FloatType minBoundHoz = goalBounds[GOAL_BOUNDS::GOAL_HOZ_MIN];
 
         bool withinLongitMargin = (nextStateVector[STATE_INFO::PED_LONGIT] <= maxBoundLongit) && (nextStateVector[STATE_INFO::PED_LONGIT] >= minBoundLongit);
         bool withinHozMargin = (nextStateVector[STATE_INFO::PED_HORIZONTAL] <= maxBoundHoz) && (nextStateVector[STATE_INFO::PED_HORIZONTAL] >= minBoundHoz);

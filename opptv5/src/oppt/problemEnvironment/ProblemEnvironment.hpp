@@ -848,7 +848,7 @@ private:
             if (terminal) {
                 PRINT("Terminal state reached!");
                 finalState = currentState;
-                if (reward > 0)
+                if (reward == robotExecutionEnvironment_->getRewardPlugin()->getMinMaxReward().second)
                     success = true;
             }
 
@@ -886,19 +886,13 @@ private:
 
             if (terminal)
                 break;
-
-            //getchar();
         }
 
         FloatType totalTimeTaken = (oppt::clock_ms() - t0) / 1000.0;
 
-        // Disable repeated step serialization for now 
+        stepResult.serialize(os);
 
-        // stepResult.serialize(os);
-
-        // //finalState = stepResult.currentState;
-
-        // Use this as the flag for parsing the final terminal state
+        //finalState = stepResult.currentState;
         os << "FINAL_STATE_BEGIN\n";
         if (finalState)
             finalState->serialize(os, "S");
@@ -909,10 +903,10 @@ private:
             serializeBeliefParticles(os, beliefParticles);
         }
         os << "Total discounted reward: " << totalDiscountedReward << endl;
-        // if (success)
-        //     os << "Run successful: True\n";
-        // else
-        //     os << "Run successful: False\n";
+        if (success)
+            os << "Run successful: True\n";
+        else
+            os << "Run successful: False\n";
         os << "Num steps: " << currentStep << endl;
         os << "Total time taken: " << totalTimeTaken * 1000.0 << "ms" << endl;
 

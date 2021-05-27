@@ -79,6 +79,10 @@ public:
     VectorFloat intentionDiscretization;
     VectorFloat intentionDiscretizationLower;
     VectorFloat intentionDiscretizationUpper;
+
+    // Car start position options
+    VectorFloat carStartPos;
+    // Save trajectory options
     std::string safeTrajFilePath = "";
     std::string safeTrajKey = "";
 
@@ -159,6 +163,12 @@ public:
         parser->addOption<VectorFloat>("generalOptions",
                                     "intentionDiscretizationLower",
                                     &KamikazeTrajGenGeneralOptions::intentionDiscretizationLower);
+
+        // Load car start position
+        parser->addOption<VectorFloat>("generalOptions",
+                                    "carStartPos",
+                                    &KamikazeTrajGenGeneralOptions::carStartPos);
+
 
         // Load safe trajs from a file
         parser->addOption<std::string>("generalOptions",
