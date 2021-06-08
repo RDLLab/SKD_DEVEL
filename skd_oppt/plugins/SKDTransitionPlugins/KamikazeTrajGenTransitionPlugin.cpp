@@ -68,9 +68,7 @@ public:
             // Stopping distance for car
             (fixedVelocity_ * stoppingTime) + (0.5 * brakingDeceleration_ * stoppingTime * stoppingTime) 
             // Added padding to avoid collision in the absence of control error
-            + carDimensions_[CAR_DIMENSIONS::CAR_LENGTH]/2  + (pedDimensions_[PED_DIMENSIONS::PED_RADIUS])
-            //whole step padding
-            + (fixedStepTime_ * fixedVelocity_);
+            + carDimensions_[CAR_DIMENSIONS::CAR_LENGTH]/2 + (fixedStepTime_ * (fixedVelocity_ / 2));
 
 
 
@@ -138,22 +136,27 @@ public:
         }
 
         // Add error to the car speed
-        FloatType speedError = getUniformDistSample(-0.05 * resultingState[STATE_INFO::CAR_SPEED], 0.05 * resultingState[STATE_INFO::CAR_SPEED]);
+        FloatType speedError = getUniformDistSample(-0.05 * fixedVelocity_, 0.05 * fixedVelocity_);
         //FloatType speedError = 0;
         resultingState[STATE_INFO::CAR_SPEED] = clamp(resultingState[STATE_INFO::CAR_SPEED] + speedError, 0, fixedVelocity_) ;
 
 
     
-        // Clip the speed and deceleration to 0
-        if(stateVector[STATE_INFO::CAR_SPEED] <= 0){
-            currentAcceleration = 0;
-        }
+        // // Clip the speed and deceleration to 0
+        // if(stateVector[STATE_INFO::CAR_SPEED] <= 0){
+        //     currentAcceleration = 0;
+        // }
+        FloatType carDisplacement =  stateVector[STATE_INFO::CAR_SPEED] * fixedStepTime_
+                                                        + (0.5 * fixedStepTime_ * fixedStepTime_ * currentAcceleration);
+
+        // Clamp displacement
+        carDisplacement = clamp(carDisplacement, 0, fixedVelocity_ * fixedStepTime_);
+
  
         // Update car longitudinal location based on the velocity ( have to decide if current one or lag one step.)
         // Use the currrent speed of the car to update its postion according to the kinematics  dS=  vot + 1/2 a(t^2)
-        resultingState[STATE_INFO::CAR_LONGIT] = stateVector[STATE_INFO::CAR_LONGIT]
-                                                    + (stateVector[STATE_INFO::CAR_SPEED] * fixedStepTime_)
-                                                        + (0.5 * fixedStepTime_ * fixedStepTime_ * currentAcceleration);
+        resultingState[STATE_INFO::CAR_LONGIT] = stateVector[STATE_INFO::CAR_LONGIT] + carDisplacement;
+                                                    
 
 
         //Update pedestrian location according to best action taken 

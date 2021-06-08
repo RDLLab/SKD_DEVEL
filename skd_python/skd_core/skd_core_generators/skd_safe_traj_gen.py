@@ -6,7 +6,7 @@ skd_core_dir = os.path.dirname(os.path.dirname(source_path))
 skd_python_dir = os.path.dirname(skd_core_dir)
 
 if(skd_python_dir not in sys.path):
-	sys.path.append(skd_core_dir)
+	sys.path.append(skd_python_dir)
 
 # Import yaml
 import argparse
@@ -26,12 +26,11 @@ class SafeTrajGenerator:
 	"""
 	def __init__(self, config_file_path, module_output_dir):
 		""" 
-		Constructor for the Safe Traj Generator Module.
-		Each Trajectory generator is identified by a timestamp that is used as a
-		prefix in the output files of this module.
+		Constructor for the Safe Traj Generator Module
 		"""
 		# Initial settings
 		self.config_path = config_file_path
+		# Ouput directory (Should be created outside of the constructor)
 		self.module_output_dir = module_output_dir
 		
 		# Local count on the number of safe trajectories generated
@@ -57,12 +56,11 @@ class SafeTrajGenerator:
 		# Set output dirs
 		self.oppt_logs_dir = self.module_output_dir + "/oppt_logs" 
 		self.oppt_experiment_cfgs = self.module_output_dir + "/oppt_experiment_cfgs" 
-		self.safe_trajectories_db = self.module_output_dir + "/safe_trajectories_db" 
 		# Outdir for validators
 		self.safe_traj_validator_outdir = self.module_output_dir + "/safe_traj_validator_outdir" 
 		
 
-		# Create module output_dirs
+		# Create internal outpudir directories within module output directry
 		assert (self.create_module_output_dirs()), "Error creating directores"
 
 		
@@ -76,8 +74,6 @@ class SafeTrajGenerator:
 			os.makedirs(self.oppt_logs_dir)
 			# Create DB dir for successful safe crossings in the Safe Traj Experiment attempts
 			os.makedirs(self.oppt_experiment_cfgs)
-			# Create an oppt_experiment cfg files to record the config files used for each set of experiments
-			os.makedirs(self.safe_trajectories_db)
 		# Throw exception
 		except OSError as error:
 			return False
@@ -86,7 +82,7 @@ class SafeTrajGenerator:
 
 
 	def generate_config_safe_trajectories(self, planner_executable_path):
-		""" Generate safe trajectories based on the speficication """
+		""" Generate safe trajectories based on the specification """
 		
 		for goal_bound in self.goal_bounds:
 
@@ -211,7 +207,8 @@ class SafeTrajValidator:
 def main():
 	""" Entry point for assesment """
 	argparser = argparse.ArgumentParser(
-	description= "Adversary Safe Trajectory Generator")
+	description= "Adversary Safe Trajectory Generator. Generates Safe Trajectories using the POMDP Model, according to the parameters"
+	" specified in the config file (-cfg). The planner executable(-p) will be used to generate the trajectories")
 
 	argparser.add_argument(
 		'-cfg', '--config',
@@ -227,7 +224,7 @@ def main():
 
 
 	argparser.add_argument(
-		'-p', '--planner',
+		'-oppt', '--planner',
 		metavar='SafeTrajGenModuleOutpuDir',
 		type=str,
 		help='Parent to output directory of the module')
@@ -244,8 +241,8 @@ def main():
 	print("Timestamp: %s" % (timestamp))
 
 	# Create generator to run all the experiments
-	generator = SafeTrajGenerator(config_path, module_outdir, planner_exec_path)
-	generator.execute_kamikaze_traj_gen_configs()
+	generator = SafeTrajGenerator(config_path, module_outdir)
+	generator.generate_config_safe_trajectories(planner_exec_path)
 
 
 

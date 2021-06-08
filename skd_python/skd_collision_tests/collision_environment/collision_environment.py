@@ -90,7 +90,7 @@ class CollisionEnvironment:
             car_step_start_pos = run_car_controller.get_current_pos()
 
             # Append state for logging
-            step_entries.append(self.get_env_state(run_ped_controller, run_car_controller))
+            step_entries.append(self.get_env_state(run_ped_controller, run_car_controller, collision_flag))
             # Advance the state of the car controller
             run_car_controller.advance_car_state(run_ped_controller)
             
@@ -115,7 +115,7 @@ class CollisionEnvironment:
             step_count += 1
 
         # Append the last state
-        step_entries.append(self.get_env_state(run_ped_controller, run_car_controller))
+        step_entries.append(self.get_env_state(run_ped_controller, run_car_controller, collision_flag))
 
         # Append collision flags and multiplier
         self.run_success_log.append(collision_flag)
@@ -123,7 +123,8 @@ class CollisionEnvironment:
 
         # Save entry
         self.run_entries.append(copy.deepcopy(step_entries))
-        self.serialize_run(copy.deepcopy(step_entries), run_number, experiment_out_dir, collision_flag, run_car_controller.get_car_dimensions())
+        self.serialize_run(copy.deepcopy(step_entries), run_number, experiment_out_dir, 
+            collision_flag, run_car_controller.get_car_dimensions())
 
 
 
@@ -157,8 +158,6 @@ class CollisionEnvironment:
         return False
 
 
-
-
     """ Outputs information to the terminal about the current state of the environment, including the position of the 
     controllers in it"""
     def print_env_state(self, run_ped_controller, run_car_controller):
@@ -168,10 +167,11 @@ class CollisionEnvironment:
         print(run_car_controller.get_car_state())
 
     """ queries for the current state of the simulation environment """
-    def get_env_state(self, ped_controller, car_controller):
+    def get_env_state(self, ped_controller, car_controller, collision_flag):
         current_state = []
         current_state.extend(ped_controller.get_current_pos())
         current_state.extend(car_controller.get_car_state())
+        current_state.append(collision_flag)
         return current_state
 
     # Get the log info of the experiment environment

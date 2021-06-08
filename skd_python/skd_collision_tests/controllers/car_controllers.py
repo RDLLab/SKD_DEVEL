@@ -53,7 +53,8 @@ class BasicCarController:
     CAR_ACCEL_RATE = 1.25 # Car acceleration from stop is assumed to be constant 1.25m/s^2
     SIMULATION_STEP_TIME = 0.3
     """ Constructor of the car class """
-    def __init__(self, car_longit_start=100.0, car_horizontal_start=-2.0, max_speed=8.33, braking_rate=-3.5, multiplier=1.0, car_dims = [4.66, 1.68]):
+    def __init__(self, car_longit_start=100.0, car_horizontal_start=-2.0, max_speed=8.33, 
+        braking_rate=-3.5, multiplier=1.0, car_dims = [4.68, 1.68]):
          # Car's internal information
         self.car_length = car_dims[0]
         self.car_width = car_dims[1]
@@ -84,11 +85,14 @@ class BasicCarController:
         self.car_stopping_distance = self.unit_stop_dist * self.multiplier
 
         # print("CAR USED:")
-        # print("Kappa = %f" % (self.unit_stop_dist))
-        # print("Multiplier = %f" % (self.multiplier))
-        # print("C * Kappa = %f" % (self.car_stopping_distance))
-        # print("CAR STOPPING_TIME = %f" % (self.stop_time))
-        
+        # print("- Kappa = %f" % (self.unit_stop_dist))
+        # print("- Multiplier = %f" % (self.multiplier))
+        # print("- C * Kappa = %f" % (self.car_stopping_distance))
+        # print("- CAR STOPPING_TIME = %f" % (self.stop_time))
+        # print("- CAR_MAX_SPEED=%f" % (self.car_max_speed))
+        # print("- CAR_BRAKING_RATE=%f" % (self.braking_rate))
+        # print("- CAR_DIMS: length = %f, width = %f" % (self.car_length, self.car_width))
+               
         
 
     """ get dimensions """
@@ -197,9 +201,9 @@ class BasicCarController:
         + (0.5 * self.car_acc * self.SIMULATION_STEP_TIME * self.SIMULATION_STEP_TIME)
        
         # Clamp displacement to avoid negative displacement
-        if (step_displacement < 0):
-            print("negative displacement")
-            print(step_displacement)
+        # if (step_displacement < 0):
+        #     print("negative displacement")
+        #     print(step_displacement)
         step_displacement = clamp(step_displacement, 0, self.car_max_speed * self.SIMULATION_STEP_TIME)
 
 

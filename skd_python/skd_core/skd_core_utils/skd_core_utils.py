@@ -266,7 +266,7 @@ def save_plot_number(run_num, exp_states, output_path, status):
     axes.set_autoscaley_on(True)
 
     # Save plot
-    plt.savefig(output_path +"/plot_%d.png" % (run_num), transparent=False)
+    plt.savefig(output_path +"/plot_%d.png" % (run_num), transparent=False, facecolor='white')
     plt.close()
 
 
@@ -341,7 +341,7 @@ def save_trajectories_plot(run_num, ped_safe_traj, ped_kamikaze_traj, veh_traj, 
     axes.set_autoscaley_on(True)
 
     # Save plot
-    plt.savefig(output_dir +"/plot_%d.png" % (run_num), transparent=False)
+    plt.savefig(output_dir +"/plot_%d.png" % (run_num), transparent=False, facecolor='white')
     plt.close()
 
 

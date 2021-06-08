@@ -37,6 +37,28 @@ def get_traj_min_longitudinal_point_index(safe_traj):
     return min_point_index
 
 
+def get_traj_hoz_index_closest_to(safe_traj, hoz_val):
+    LONGIT_INDEX = 0
+    HOZ_INDEX = 1
+
+    min_hoz_dist = 100000
+    # Iterate over points
+    closest_index = 0
+
+    # Iterate over all points and save index of the lowerst
+    for point_index in range(len(safe_traj)):
+        # Longitudinal point
+        point_hoz_dist = abs(safe_traj[point_index][HOZ_INDEX] - hoz_val)
+
+        # Check if this is new min point
+        if(point_hoz_dist < min_hoz_dist):
+            min_hoz_dist =  point_hoz_dist
+            closest_index = point_index
+
+    return closest_index
+
+
+
 
 def is_trajectory_valid(safe_trajectory):
     """ Returns if a given trajectory is valid for the assessment of the car """
@@ -57,17 +79,18 @@ def filter_trajectories(trajectories_db):
 
 
 
-def get_car_starting_pos(safe_trajectory, car_controller):
+def get_car_starting_pos(safe_trajectory, car_controller, car_lane_pos_hoz=-2):
     """ Calculates the car_starting_pos based on the an offset of the safe trajectory"""
+    CAR_LENGTH = 0
+    CAR_WIDTH = 1
 
-    # MAX C for now 
-    C = 1.5
     # Calculate stopping distance for this controller
-    car_stop_dist = car_controller.get_unit_stop_dist() * C
+    car_stop_dist = car_controller.get_unit_stop_dist()
+    car_dims = car_controller.get_car_dimensions()
     """ Examines the safe trajectory and outputs a starting location for the car controller with the specified
-    kinematics parameters. The output starting location should be such that the "unit controller c = 1, can interact with the pedestrian."""
-    safe_traj_min_point_index = get_traj_min_longitudinal_point_index(safe_trajectory)
-    safe_traj_min_point = safe_trajectory[safe_traj_min_point_index]
+    kinematics parameters. """
+    interaction_point_index = get_traj_hoz_index_closest_to(safe_trajectory, car_lane_pos_hoz)
+    interaction_point = safe_trajectory[interaction_point_index]
 
-    return [safe_traj_min_point[0] - car_stop_dist, -2]
+    return [interaction_point[0] - car_stop_dist, car_lane_pos_hoz]
 

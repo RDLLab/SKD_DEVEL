@@ -141,7 +141,7 @@ class CollisionExperimentDataAnalyser:
                 safe_traj_dir, safe_traj_filepath, controller_id, safe_traj_index)
 
             # Plot as well
-            self.plot_single_safe_trajectory(safe_traj_dir, controller_id, safe_traj_index, max_plots = -1)
+            self.plot_single_safe_trajectory(safe_traj_dir, controller_id, safe_traj_index, max_plots = 10)
 
             # Save stats
             safe_traj_file_data[safe_traj_dir] = copy.deepcopy(single_traj_data)

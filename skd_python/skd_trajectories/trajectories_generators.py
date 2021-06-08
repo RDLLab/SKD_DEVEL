@@ -60,17 +60,20 @@ def sample_safe_trajectory_set(
     for sample_num in range(num_trajs):
         sampled_traj = sample_safe_trajectory(start_points[sample_num], contact_points[sample_num], end_points[sample_num], steps_half1, steps_half2)
         trajectories_db.append(sampled_traj)
-        print("Plotting sampled trajectory number %d" % (sample_num))
-        plot_2D_traj(sampled_traj, "Sampled safe traj num %d" % (sample_num))
 
     # Return the whole database
     return trajectories_db
 
 
+def plot_safe_trajectories(trajectories, plots_outdir, plots_title):
+    # Plot every trajectory
+    for traj_num in range(len(trajectories)):
+        traj_plot_title = plots_title + " # %d" % (traj_num)
+        traj_plot_path = plots_outdir + "/plot_%d" % (traj_num)
+        plot_2D_traj(trajectories[traj_num], traj_plot_title, traj_plot_path)
 
-""" Loads a csv table represetnation of the run tracker data and plots the trajectory of 
-    both the pedestrian and the car involved in the data """
-def plot_2D_traj(trajectory, plot_title):
+
+def plot_2D_traj(trajectory, plot_title, save_path = None):
     TRAJ_LONGIT = 0
     TRAJ_HOZ = 1
 
@@ -113,7 +116,13 @@ def plot_2D_traj(trajectory, plot_title):
     plt.ylim(110,130)
 
     # Save plot
-    plt.show()
+    if(save_path != None):
+        # Save plot
+        plt.savefig(save_path, transparent=False, facecolor='white')
+    else:
+        plt.show()
+
+    # Close figure
     plt.close()
 
 
@@ -131,7 +140,7 @@ def plot_trajectory_2D_set(trajectory_set, title=""):
 def sample_safe_trajectory(start_point, contact_point, end_point, num_steps_half1, num_steps_half2):
     # Paritition space in half to sample
     first_half_path = np.linspace([start_point, 3], [contact_point, -2], num_steps_half1, endpoint = False).tolist()
-    second_half_path = np.linspace([contact_point, -2], [end_point, -4], num_steps_half2, endpoint = True).tolist()
+    second_half_path = np.linspace([contact_point, -2], [end_point, -4.5], num_steps_half2, endpoint = True).tolist()
    
     # Sampled path 
     sample_path = first_half_path

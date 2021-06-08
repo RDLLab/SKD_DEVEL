@@ -39,5 +39,5 @@ fi
 cd build
 # Install inside build directory
 cmake -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} ..
-make -j$(nproc - 1) && make install
+make -j$(nproc) && make install
 

@@ -29,7 +29,7 @@ def main():
 	 	'-cfg', '--config',
 		metavar='configFile',
 		type=str,
-		help='path to configuration file for SKD Assessment')
+		help='general config file path for skd aggregator using pomdp')
 
 	argparser.add_argument(
 		'-o', '--outdir',
@@ -98,9 +98,6 @@ def main():
 	analyser = skd_kamikaze_data_analyser.SKDKamikazeDataAnalyser(summary_file, kamikaze_analyser_dir)
 	analyser.parse_summary_data()
 	
-
-
-
 
 	
 
