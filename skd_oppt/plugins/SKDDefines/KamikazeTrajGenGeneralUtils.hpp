@@ -133,6 +133,11 @@ public:
 
         // Controller type multiplier
         parser->addOption<FloatType>("generalOptions",
+                                       "fixedVelocity",
+                                   &KamikazeTrajGenGeneralOptions::fixedVelocity);
+
+        // Controller type multiplier
+        parser->addOption<FloatType>("generalOptions",
                                        "controllerMultiplier",
                                    &KamikazeTrajGenGeneralOptions::controllerMultiplier);
     

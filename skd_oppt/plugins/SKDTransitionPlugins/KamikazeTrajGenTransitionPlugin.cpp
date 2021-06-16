@@ -83,6 +83,7 @@ public:
         // Populate map and generate error distributions
         populateLinkMap();
 
+
         
         return true;
     }
@@ -133,19 +134,21 @@ public:
             // Keep driving at a constant speed
             resultingState[STATE_INFO::CAR_SPEED] = fixedVelocity_;
             currentAcceleration = 0;
+
+            // Add error to the car speed
+            FloatType speedError = getUniformDistSample(-0.05 * fixedVelocity_, 0.05 * fixedVelocity_);
+            //FloatType speedError = 0;
+            resultingState[STATE_INFO::CAR_SPEED] = clamp(resultingState[STATE_INFO::CAR_SPEED] + speedError, 0, fixedVelocity_) ;
         }
 
-        // Add error to the car speed
-        FloatType speedError = getUniformDistSample(-0.05 * fixedVelocity_, 0.05 * fixedVelocity_);
-        //FloatType speedError = 0;
-        resultingState[STATE_INFO::CAR_SPEED] = clamp(resultingState[STATE_INFO::CAR_SPEED] + speedError, 0, fixedVelocity_) ;
+       
 
 
     
         // // Clip the speed and deceleration to 0
-        // if(stateVector[STATE_INFO::CAR_SPEED] <= 0){
-        //     currentAcceleration = 0;
-        // }
+        if(stateVector[STATE_INFO::CAR_SPEED] <= 0){
+            currentAcceleration = 0;
+        }
         FloatType carDisplacement =  stateVector[STATE_INFO::CAR_SPEED] * fixedStepTime_
                                                         + (0.5 * fixedStepTime_ * fixedStepTime_ * currentAcceleration);
 

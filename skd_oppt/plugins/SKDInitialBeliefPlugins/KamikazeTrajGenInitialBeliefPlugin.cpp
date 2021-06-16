@@ -86,7 +86,7 @@ public:
          // Sample an initial state vector
         //VectorFloat initialStateVec = toStdVec<FloatType>(uniformDistribution_->sample(1).col(0));
         const FloatType initialIntention = CAR_INTENTIONS::CRUISING;
-        const FloatType initialSpeed = 0;
+        const FloatType initialSpeed = generalOptions_->fixedVelocity;
         // Initial location of pedestrian in safe trajectory
         VectorFloat pedInit = safeTraj_[0];
         // Initial car start pos

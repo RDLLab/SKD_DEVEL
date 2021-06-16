@@ -59,6 +59,34 @@ def get_traj_hoz_index_closest_to(safe_traj, hoz_val):
 
 
 
+def get_region_min_longit_point(safe_traj, min_hoz_val, max_hoz_val):
+    # Checks for the minimum longitundinal point along the trajectory  that is within 
+    # the specified bounds
+    LONGIT_INDEX = 0
+    HOZ_INDEX = 1
+
+    # min longit val (max by default)
+    min_longit_val = 1000000
+
+    # Check for bounds
+    assert (max_hoz_val > min_hoz_val), "min val:%f, max_val:%f are invalid" % (min_hoz_val, max_hoz_val)
+
+    # Iterate over points in safe traj
+    for loc_point in safe_traj:
+        # Get point index
+        if(loc_point[HOZ_INDEX] >= min_hoz_val and loc_point[HOZ_INDEX] <= max_hoz_val):
+            if(loc_point[LONGIT_INDEX] < min_longit_val):
+                min_longit_val = loc_point[LONGIT_INDEX]
+
+
+    # Return filtered result
+    return min_longit_val
+
+
+    
+
+
+
 
 def is_trajectory_valid(safe_trajectory):
     """ Returns if a given trajectory is valid for the assessment of the car """
@@ -85,12 +113,17 @@ def get_car_starting_pos(safe_trajectory, car_controller, car_lane_pos_hoz=-2):
     CAR_WIDTH = 1
 
     # Calculate stopping distance for this controller
-    car_stop_dist = car_controller.get_unit_stop_dist()
+    car_stop_dist = car_controller.get_car_stop_dist()
     car_dims = car_controller.get_car_dimensions()
-    """ Examines the safe trajectory and outputs a starting location for the car controller with the specified
-    kinematics parameters. """
-    interaction_point_index = get_traj_hoz_index_closest_to(safe_trajectory, car_lane_pos_hoz)
-    interaction_point = safe_trajectory[interaction_point_index]
 
-    return [interaction_point[0] - car_stop_dist, car_lane_pos_hoz]
+    # Retrieves the minimum longitudinal point value within a specified region
+    car_min_region = car_lane_pos_hoz - car_dims[CAR_WIDTH]/2
+    car_max_region = car_lane_pos_hoz + car_dims[CAR_WIDTH]/2
+
+    min_longit_point = get_region_min_longit_point(safe_trajectory, car_min_region, car_max_region) 
+
+    car_start_pos_longit = min_longit_point - car_stop_dist
+
+
+    return [car_start_pos_longit, car_lane_pos_hoz]
 

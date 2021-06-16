@@ -76,18 +76,24 @@ class BasicCarController:
 
         # Calculate stopping distance for this controller
         self.stop_time = abs(self.car_max_speed / self.braking_rate)
+
         # Stopping distance of the car based on braking rate
-        self.unit_stop_dist = (self.car_max_speed * self.stop_time) + (0.5 * self.braking_rate 
+        self.car_stop_dist = (self.car_max_speed * self.stop_time) + (0.5 * self.braking_rate 
             * self.stop_time * self.stop_time)
-        # Add padding to the unit stopping distance "Kappa"
-        self.unit_stop_dist += (self.car_length/2) + (self.car_max_speed/2 * self.SIMULATION_STEP_TIME)
-        # Stopping distance of the car based on braking rate and multiplier
-        self.car_stopping_distance = self.unit_stop_dist * self.multiplier
+
+        # Car padding
+        self.car_padding_dist = (self.car_length)/2 + (self.car_max_speed * self.SIMULATION_STEP_TIME)
+
+        # Add padding to the car stopping dist
+        self.car_stop_dist += self.car_padding_dist
+
+        # Threshold at which the car starts braking
+        self.start_brake_dist = (self.car_stop_dist * multiplier)
 
         # print("CAR USED:")
-        # print("- Kappa = %f" % (self.unit_stop_dist))
+        # print("- Kappa = %f" % (self.car_stop_dist))
         # print("- Multiplier = %f" % (self.multiplier))
-        # print("- C * Kappa = %f" % (self.car_stopping_distance))
+        # print("- C * Kappa = %f" % (self.start_brake_dist))
         # print("- CAR STOPPING_TIME = %f" % (self.stop_time))
         # print("- CAR_MAX_SPEED=%f" % (self.car_max_speed))
         # print("- CAR_BRAKING_RATE=%f" % (self.braking_rate))
@@ -107,14 +113,14 @@ class BasicCarController:
         """ Gets the car state information in the format [longit_pos, hoz_pos, car_vel, car_acc, braking_intention]"""
         return [self.longit_pos, self.hoz_pos, self.car_vel, self.car_acc, self.braking]
 
-    def get_unit_stop_dist(self):
+    def get_car_stop_dist(self):
         """ Returns the unitary stopping distance of the basic controller """
-        return self.unit_stop_dist
+        return self.car_stop_dist
 
 
-    def get_car_stopping_distance(self):
+    def get_car_start_brake_dist(self):
         """ Returns the threshold value in meters at which the car starts to decelerate for an obstacle"""
-        return self.car_stopping_distance
+        return self.start_brake_dist
 
 
     def get_car_max_speed(self):
@@ -152,7 +158,7 @@ class BasicCarController:
         print("MULTIPLIER")
         print(self.multiplier)
         print("CONTROLLER_STOPPING_DIST")
-        print(self.car_stopping_distance)
+        print(self.start_brake_dist)
 
 
 
@@ -185,25 +191,23 @@ class BasicCarController:
             # Car is driving at constant speed
             self.car_acc = 0
             self.car_vel = self.car_max_speed
+            # Update the speed parameter of the car with some error
+            speed_error = np.random.uniform(-0.05 * self.car_max_speed, 0.05 * self.car_max_speed)
+            self.car_vel = clamp(self.car_vel + speed_error, 0, self.car_max_speed)
+
 
 
         # If velocity is down to zero, stop decelerating
-        # if (self.car_vel <= 0):
-        #     self.car_acc = 0
+        if (self.car_vel <= 0):
+            self.car_acc = 0
 
-        # Update the speed parameter of the car with some error
-        speed_error = np.random.uniform(-0.05 * self.car_max_speed, 0.05 * self.car_max_speed)
-        self.car_vel = clamp(self.car_vel + speed_error, 0, self.car_max_speed)
-
+       
 
         # Update longitudinal position according to (vot + 1/2(a)(t^2)
         step_displacement = (current_car_state[self.CAR_SPEED_INDEX] * self.SIMULATION_STEP_TIME) 
         + (0.5 * self.car_acc * self.SIMULATION_STEP_TIME * self.SIMULATION_STEP_TIME)
        
         # Clamp displacement to avoid negative displacement
-        # if (step_displacement < 0):
-        #     print("negative displacement")
-        #     print(step_displacement)
         step_displacement = clamp(step_displacement, 0, self.car_max_speed * self.SIMULATION_STEP_TIME)
 
 
@@ -214,7 +218,7 @@ class BasicCarController:
     stopping distance assigned to the car """
     def need_to_brake(self, rel_ped_to_car):
         # Start breaking if condition is met
-        if (rel_ped_to_car[self.LONGIT_INDEX]) <= self.car_stopping_distance:
+        if (rel_ped_to_car[self.LONGIT_INDEX]) <= self.start_brake_dist:
             return True
 
         # Otherwise, return false
